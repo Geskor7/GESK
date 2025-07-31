@@ -7,6 +7,38 @@
   <link rel="stylesheet" href="script.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 </head>
+  <style>
+  body {
+    cursor: none; /* Hide default cursor */
+  }
+
+  #matrix {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: block;
+    z-index: 0;
+  }
+
+  #cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    margin-left: -12px;
+    margin-top: -12px;
+    border: 2px solid #00ff00;
+    border-radius: 50%;
+    pointer-events: none;
+    mix-blend-mode: difference;
+    transition: transform 0.15s ease-out;
+    z-index: 1000;
+  }
+</style>
+
 <body>
     <style>
         * {
@@ -1049,6 +1081,72 @@
     <script src="script.js"></script>
 
   <script src="script.js"></script>
+  <canvas id="matrix"></canvas>
+<div id="cursor"></div>
+<script>
+  // Matrix effect code
+  const canvas = document.getElementById('matrix');
+  const ctx = canvas.getContext('2d');
+
+  let width = window.innerWidth;
+  let height = window.innerHeight;
+  canvas.width = width;
+  canvas.height = height;
+
+  const letters = '01!@#$%^&*()_+=-{}[]|:;<>?/.,`~ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const fontSize = 16;
+  const columns = Math.floor(width / fontSize);
+  const drops = new Array(columns).fill(0);
+
+  function draw() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.fillStyle = '#0F0';
+    ctx.font = fontSize + 'px monospace';
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = letters.charAt(Math.floor(Math.random() * letters.length));
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+
+  setInterval(draw, 33);
+
+  window.addEventListener('resize', () => {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+  });
+
+  // Custom cursor code
+  const cursor = document.getElementById('cursor');
+  let mouseX = width / 2;
+  let mouseY = height / 2;
+  let cursorX = mouseX;
+  let cursorY = mouseY;
+
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  function animateCursor() {
+    cursorX += (mouseX - cursorX) * 0.2;
+    cursorY += (mouseY - cursorY) * 0.2;
+
+    cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) scale(1)`;
+
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+</script>
 </body>
 </html>
 
