@@ -669,3 +669,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
   typeWriterStart();
 });
+
+const characters = "01ABCDEF!@#$%^&*()_+=-{}[]|:;<>?/.,`~";
+
+const trailSpawnInterval = 30;
+const trailFallDistance = 150;
+const trailScale = 0.5;
+const trailDuration = 2.2;
+const trailXJitter = 30;
+const trailYJitter = 10;
+
+let mouseX = 0;
+let mouseY = 0;
+let trailInterval = null;
+
+function spawnTrailChar(x, y) {
+  const span = document.createElement('span');
+  span.classList.add('matrix-trail-char');
+  span.textContent = characters[Math.floor(Math.random() * characters.length)];
+
+  const xOffset = (Math.random() - 0.5) * trailXJitter;
+  const yOffset = (Math.random() - 0.5) * trailYJitter;
+  span.style.left = `${x + xOffset}px`;
+  span.style.top = `${y + yOffset}px`;
+
+  document.body.appendChild(span);
+
+  gsap.to(span, {
+    opacity: 0,
+    y: `+=${trailFallDistance + (Math.random() * 10 - 5)}`,
+    scale: trailScale,
+    rotation: (Math.random() - 0.5) * 720,
+    duration: trailDuration,
+    ease: "power1.out",
+    onComplete: () => span.remove()
+  });
+}
+
+function startTrail() {
+  if (!trailInterval) {
+    trailInterval = setInterval(() => {
+      if (mouseX !== 0 && mouseY !== 0) {
+        spawnTrailChar(mouseX, mouseY);
+      }
+    }, trailSpawnInterval);
+  }
+}
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  startTrail();
+});
+
