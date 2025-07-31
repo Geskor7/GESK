@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  const startMessage = "[Click to enter]";
+  const startMessage = "Click here to see the motion baby";
   let startTextContent = '';
   let startIndex = 0;
   let startCursorVisible = true;
@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
-  const name = "RAX";
+  const name = "JAQLIV";
   let nameText = '';
   let nameIndex = 0;
   let isNameDeleting = false;
@@ -666,3 +666,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+
+  typeWriterStart();
+});
