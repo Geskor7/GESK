@@ -275,9 +275,7 @@ body.car-theme {
 }
 
 #profile-name {
-  body {
-  font-family: 'Manufacturing Consent', sans-serif;
-}
+  font-family: 'Orbitron', sans-serif !important;
   font-weight: 700;
   font-size: 32px;
   text-align: center;
@@ -774,21 +772,4 @@ body.car-theme {
   30% {
     clip: rect(65px, 9999px, 45px, 0);
   }
-}
-
-body {
-  margin: 0;
-  overflow: hidden;
-  background: black;
-  color: white;
-}
-
-.matrix-trail-char {
-  position: absolute;
-  font-family: monospace;
-  font-size: 24px;
-  color: #00ff00;
-  text-shadow: 0 0 8px #00ff00;
-  pointer-events: none;
-  user-select: none;
 }
