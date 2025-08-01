@@ -669,3 +669,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
   typeWriterStart();
 });
+// Matrix-style cursor trail effect
+document.addEventListener('DOMContentLoaded', () => {
+    const chars = "日ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const cursor = document.querySelector('.custom-cursor');
+    let mouseX = 0, mouseY = 0;
+    let trailElements = [];
+    const maxTrailLength = 20; // Number of trailing characters
+
+    // Update cursor position
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        if (cursor) {
+            cursor.style.left = `${mouseX}px`;
+            cursor.style.top = `${mouseY}px`;
+        }
+    });
+
+    // Create trailing characters
+    function createTrail() {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+        const trailChar = document.createElement('div');
+        trailChar.className = 'matrix-trail-char';
+        trailChar.textContent = char;
+        trailChar.style.left = `${mouseX}px`;
+        trailChar.style.top = `${mouseY}px`;
+        document.body.appendChild(trailChar);
+
+        // Random slight offset for natural look
+        const offsetX = (Math.random() - 0.5) * 20;
+        const offsetY = (Math.random() - 0.5) * 20;
+        trailChar.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px)`;
+
+        trailElements.push(trailChar);
+
+        // Remove oldest element if trail is too long
+        if (trailElements.length > maxTrailLength) {
+            const oldestChar = trailElements.shift();
+            oldestChar.remove();
+        }
+
+        // Animate fading out
+        gsap.to(trailChar, {
+            duration: 0.8,
+            opacity: 0,
+            y: "+=20", // Makes characters fall downward
+            ease: "power1.out",
+            onComplete: () => trailChar.remove()
+        });
+    }
+
+    // Generate trail characters at an interval
+    setInterval(createTrail, 50); // Adjust speed (lower = faster)
+});
