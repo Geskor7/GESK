@@ -773,15 +773,10 @@ body.car-theme {
     clip: rect(65px, 9999px, 45px, 0);
   }
 }
-.matrix-trail-char {
+canvas {
     position: fixed;
-    font-family: 'Courier New', monospace;
-    font-size: 18px;
-    color: rgba(255, 255, 255, 0.9);
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+    top: 0;
+    left: 0;
     pointer-events: none;
-    z-index: 9998;
-    opacity: 1;
-    transform: translate(-50%, -50%);
-    white-space: nowrap;
+    z-index: 9999;
 }
