@@ -70,13 +70,17 @@ class CursorTrail {
 
 // Initialize cursor trail when page loads
 document.addEventListener('DOMContentLoaded', () => {
-    // [Keep all your existing DOMContentLoaded code]
+    const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
     
-    // Add this inside your existing DOMContentLoaded:
     if (!isTouchDevice) {
         new CursorTrail();
     }
+
+    // [Rest of your existing DOMContentLoaded code...]
 });
+
+// [Rest of your existing JavaScript (initMedia, event listeners, etc.)...]
+
 let hasUserInteracted = false;
 
 function initMedia() {
@@ -744,3 +748,7 @@ document.addEventListener('DOMContentLoaded', () => {
       isShowingSkills = false;
     }
   });
+
+
+  typeWriterStart();
+});
