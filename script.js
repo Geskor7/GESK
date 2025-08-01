@@ -669,57 +669,81 @@ document.addEventListener('DOMContentLoaded', () => {
 
   typeWriterStart();
 });
-// Matrix-style cursor trail effect
-document.addEventListener('DOMContentLoaded', () => {
-    const chars = "日ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const cursor = document.querySelector('.custom-cursor');
-    let mouseX = 0, mouseY = 0;
-    let trailElements = [];
-    const maxTrailLength = 20; // Number of trailing characters
+const canvas = document.querySelector('canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let mouseX = 0, mouseY = 0;
+let isMouseMoving = false;
 
-    // Update cursor position
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        if (cursor) {
-            cursor.style.left = `${mouseX}px`;
-            cursor.style.top = `${mouseY}px`;
-        }
-    });
+// Set canvas dimensions
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
 
-    // Create trailing characters
-    function createTrail() {
-        const char = chars[Math.floor(Math.random() * chars.length)];
-        const trailChar = document.createElement('div');
-        trailChar.className = 'matrix-trail-char';
-        trailChar.textContent = char;
-        trailChar.style.left = `${mouseX}px`;
-        trailChar.style.top = `${mouseY}px`;
-        document.body.appendChild(trailChar);
+// Track mouse movement
+document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    isMouseMoving = true;
+    
+    // Create new particles at mouse position
+    createParticles(mouseX, mouseY);
+});
 
-        // Random slight offset for natural look
-        const offsetX = (Math.random() - 0.5) * 20;
-        const offsetY = (Math.random() - 0.5) * 20;
-        trailChar.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px)`;
-
-        trailElements.push(trailChar);
-
-        // Remove oldest element if trail is too long
-        if (trailElements.length > maxTrailLength) {
-            const oldestChar = trailElements.shift();
-            oldestChar.remove();
-        }
-
-        // Animate fading out
-        gsap.to(trailChar, {
-            duration: 0.8,
-            opacity: 0,
-            y: "+=20", // Makes characters fall downward
-            ease: "power1.out",
-            onComplete: () => trailChar.remove()
+// Generate particles
+function createParticles(x, y) {
+    const particleCount = 5; // Number of particles per movement
+    
+    for (let i = 0; i < particleCount; i++) {
+        const size = 2 + Math.random() * 3; // Random size
+        const speedX = -1 + Math.random() * 2; // Random X movement
+        const speedY = -1 + Math.random() * 2; // Random Y movement
+        const opacity = 0.8 + Math.random() * 0.2; // Random opacity
+        
+        particles.push({
+            x: x,
+            y: y,
+            size: size,
+            speedX: speedX,
+            speedY: speedY,
+            opacity: opacity,
+            life: 100 // Fade-out duration
         });
     }
+}
 
-    // Generate trail characters at an interval
-    setInterval(createTrail, 50); // Adjust speed (lower = faster)
-});
+// Update and draw particles
+function updateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        
+        // Update position
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.life--; // Decrease lifespan
+        
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity * (p.life / 100)})`;
+        ctx.fill();
+        
+        // Remove dead particles
+        if (p.life <= 0) {
+            particles.splice(i, 1);
+            i--;
+        }
+    }
+    
+    requestAnimationFrame(updateParticles);
+}
+
+// Start animation
+updateParticles();
+
+// Handle window resize
+window.addEventListener('resize', resizeCanvas);
