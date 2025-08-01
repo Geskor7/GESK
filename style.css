@@ -773,37 +773,51 @@ body.car-theme {
     clip: rect(65px, 9999px, 45px, 0);
   }
 }
-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 9999;
-}
 
-/* Add to your existing CSS */
+/* ====================== */
+/* Cursor Trail Effect */
+/* ====================== */
 #cursor-trail {
     position: fixed;
-    pointer-events: none;
-    z-index: 9998;
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: radial-gradient(circle, var(--primary-color) 0%, var(--secondary-color) 100%);
+    background: radial-gradient(
+        circle, 
+        var(--primary-color) 0%, 
+        var(--secondary-color) 100%
+    );
     opacity: 0.7;
     transform: translate(-50%, -50%);
-    transition: transform 0.05s linear, opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 9998; /* Below custom cursor (10000) but above most content */
     mix-blend-mode: screen;
+    transition: 
+        transform 0.1s ease-out,
+        opacity 0.3s ease,
+        width 0.3s ease,
+        height 0.3s ease;
+    will-change: transform, opacity;
 }
 
 .cursor-trail-dot {
-    position: absolute;
+    position: fixed;
     width: 8px;
     height: 8px;
     border-radius: 50%;
     background: currentColor;
     transform: translate(-50%, -50%);
     pointer-events: none;
-    z-index: 9997;
-    opacity: 0.6;
+    z-index: 9997; /* Below main trail */
+    opacity: 0;
+    transition: 
+        opacity 0.3s ease,
+        transform 0.2s ease-out;
+    will-change: transform, opacity;
+}
+
+/* Hide trail on touch devices */
+body.touch-device #cursor-trail,
+body.touch-device .cursor-trail-dot {
+    display: none !important;
 }
